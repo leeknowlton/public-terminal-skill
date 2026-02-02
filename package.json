@@ -1,0 +1,32 @@
+{
+  "name": "public-terminal-skill",
+  "version": "0.1.0",
+  "description": "OpenClaw skill for AI agents to interact with Public Terminal - post messages and read the feed",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "openclaw",
+    "farcaster",
+    "public-terminal",
+    "ai-agent",
+    "blockchain",
+    "base"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "viem": "^2.23.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
