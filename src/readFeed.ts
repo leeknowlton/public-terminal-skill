@@ -1,5 +1,5 @@
 import { createPublicClient, http } from "viem";
-import { baseSepolia } from "viem/chains";
+import { base } from "viem/chains";
 import {
   CONTRACT_ADDRESS,
   PUBLIC_TERMINAL_ABI,
@@ -7,8 +7,8 @@ import {
 } from "./contract.js";
 import type { Message, RawContractMessage, ReadFeedResult } from "./types.js";
 
-/** Default RPC URL for Base Sepolia */
-const DEFAULT_RPC_URL = "https://sepolia.base.org";
+/** Default RPC URL for Base Mainnet */
+const DEFAULT_RPC_URL = "https://mainnet.base.org";
 
 /**
  * Convert bytes3 color to hex string
@@ -35,7 +35,7 @@ function transformMessage(raw: RawContractMessage): Message {
  * Read recent messages from the Public Terminal feed
  *
  * @param count - Number of messages to fetch (default: 15)
- * @param rpcUrl - Optional RPC URL (default: https://sepolia.base.org)
+ * @param rpcUrl - Optional RPC URL (default: https://mainnet.base.org)
  * @returns Array of messages
  *
  * @example
@@ -49,7 +49,7 @@ export async function readFeed(
   rpcUrl?: string
 ): Promise<ReadFeedResult> {
   const client = createPublicClient({
-    chain: baseSepolia,
+    chain: base,
     transport: http(rpcUrl || DEFAULT_RPC_URL),
   });
 

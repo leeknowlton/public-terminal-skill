@@ -3,8 +3,8 @@ import type { PublicTerminalConfig } from "./types.js";
 /** Default API base URL */
 const DEFAULT_API_URL = "https://public-terminal.vercel.app";
 
-/** Default RPC URL for Base Sepolia */
-const DEFAULT_RPC_URL = "https://sepolia.base.org";
+/** Default RPC URL for Base Mainnet */
+const DEFAULT_RPC_URL = "https://mainnet.base.org";
 
 /**
  * Load configuration from environment variables
@@ -16,7 +16,7 @@ const DEFAULT_RPC_URL = "https://sepolia.base.org";
  *
  * Optional environment variables:
  * - PUBLIC_TERMINAL_API_URL: API base URL (default: https://publicterminal.app)
- * - PUBLIC_TERMINAL_RPC_URL: RPC URL for Base Sepolia
+ * - PUBLIC_TERMINAL_RPC_URL: RPC URL for Base Mainnet
  *
  * @throws Error if required environment variables are missing
  */

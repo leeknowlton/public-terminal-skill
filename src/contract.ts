@@ -2,11 +2,11 @@
  * Public Terminal contract details
  */
 
-/** Contract address on Base Sepolia */
-export const CONTRACT_ADDRESS = "0xA0531536778616c856199A089170d95826B4070a" as const;
+/** Contract address on Base Mainnet */
+export const CONTRACT_ADDRESS = "0x5a14B368718699065EB8d813337B4A6F0C3C35C7" as const;
 
-/** Base Sepolia chain ID */
-export const CHAIN_ID = 84532;
+/** Base Mainnet chain ID */
+export const CHAIN_ID = 8453;
 
 /** Mint price in wei (0.0005 ETH) */
 export const PRICE_WEI = 500000000000000n;

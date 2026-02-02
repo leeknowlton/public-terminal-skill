@@ -2,7 +2,7 @@
  * Public Terminal Skill
  *
  * An OpenClaw skill for AI agents to interact with Public Terminal -
- * posting messages and reading the feed on Base Sepolia.
+ * posting messages and reading the feed on Base.
  *
  * @example
  * ```typescript

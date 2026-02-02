@@ -4,7 +4,7 @@ import {
   http,
   decodeEventLog,
 } from "viem";
-import { baseSepolia } from "viem/chains";
+import { base } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
 import {
   CONTRACT_ADDRESS,
@@ -20,8 +20,8 @@ import type { PostMessageResult, PublicTerminalConfig } from "./types.js";
 /** Default API base URL */
 const DEFAULT_API_URL = "https://publicterminal.app";
 
-/** Default RPC URL for Base Sepolia */
-const DEFAULT_RPC_URL = "https://sepolia.base.org";
+/** Default RPC URL for Base Mainnet */
+const DEFAULT_RPC_URL = "https://mainnet.base.org";
 
 interface SignMintResponse {
   signature: string;
@@ -137,13 +137,13 @@ export async function postMessage(text: string): Promise<PostMessageResult> {
   const rpcUrl = config.rpcUrl || DEFAULT_RPC_URL;
 
   const publicClient = createPublicClient({
-    chain: baseSepolia,
+    chain: base,
     transport: http(rpcUrl),
   });
 
   const walletClient = createWalletClient({
     account,
-    chain: baseSepolia,
+    chain: base,
     transport: http(rpcUrl),
   });
 
@@ -155,7 +155,7 @@ export async function postMessage(text: string): Promise<PostMessageResult> {
       functionName: "mint",
       args: [BigInt(config.fid), config.username, trimmedText, signature as `0x${string}`],
       value: PRICE_WEI,
-      chain: baseSepolia,
+      chain: base,
     });
 
     // Wait for confirmation
@@ -286,13 +286,13 @@ export async function postPinMessage(text: string): Promise<PostMessageResult> {
   const rpcUrl = config.rpcUrl || DEFAULT_RPC_URL;
 
   const publicClient = createPublicClient({
-    chain: baseSepolia,
+    chain: base,
     transport: http(rpcUrl),
   });
 
   const walletClient = createWalletClient({
     account,
-    chain: baseSepolia,
+    chain: base,
     transport: http(rpcUrl),
   });
 
@@ -304,7 +304,7 @@ export async function postPinMessage(text: string): Promise<PostMessageResult> {
       functionName: "mintPin",
       args: [BigInt(config.fid), config.username, trimmedText, signature as `0x${string}`],
       value: PIN_PRICE_WEI,
-      chain: baseSepolia,
+      chain: base,
     });
 
     // Wait for confirmation
