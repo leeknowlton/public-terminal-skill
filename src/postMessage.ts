@@ -297,11 +297,11 @@ export async function postPinMessage(text: string): Promise<PostMessageResult> {
   });
 
   try {
-    // Submit transaction with mintSticky
+    // Submit transaction with mintPin
     const hash = await walletClient.writeContract({
       address: CONTRACT_ADDRESS,
       abi: PUBLIC_TERMINAL_ABI,
-      functionName: "mintSticky",
+      functionName: "mintPin",
       args: [BigInt(config.fid), config.username, trimmedText, signature as `0x${string}`],
       value: PIN_PRICE_WEI,
       chain: baseSepolia,

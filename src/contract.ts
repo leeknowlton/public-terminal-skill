@@ -3,7 +3,7 @@
  */
 
 /** Contract address on Base Sepolia */
-export const CONTRACT_ADDRESS = "0x1C89997a8643A8E380305F0078BB8210e3952e1C" as const;
+export const CONTRACT_ADDRESS = "0xA0531536778616c856199A089170d95826B4070a" as const;
 
 /** Base Sepolia chain ID */
 export const CHAIN_ID = 84532;
@@ -38,10 +38,10 @@ export const PUBLIC_TERMINAL_ABI = [
     outputs: [],
     stateMutability: "payable",
   },
-  // Mint sticky function
+  // Mint pin function
   {
     type: "function",
-    name: "mintSticky",
+    name: "mintPin",
     inputs: [
       { name: "fid", type: "uint256" },
       { name: "username", type: "string" },
@@ -95,13 +95,13 @@ export const PUBLIC_TERMINAL_ABI = [
       { name: "usernameColor", type: "bytes3", indexed: false },
     ],
   },
-  // StickySet event
+  // PinSet event
   {
     type: "event",
-    name: "StickySet",
+    name: "PinSet",
     inputs: [
       { name: "tokenId", type: "uint256", indexed: true },
-      { name: "author", type: "address", indexed: true },
+      { name: "previousTokenId", type: "uint256", indexed: true },
     ],
   },
 ] as const;
