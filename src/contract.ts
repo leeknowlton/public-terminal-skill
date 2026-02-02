@@ -11,8 +11,8 @@ export const CHAIN_ID = 84532;
 /** Mint price in wei (0.0005 ETH) */
 export const PRICE_WEI = 500000000000000n;
 
-/** Sticky mint price in wei (0.005 ETH) */
-export const STICKY_PRICE_WEI = 5000000000000000n;
+/** Pin mint price in wei (0.005 ETH) */
+export const PIN_PRICE_WEI = 5000000000000000n;
 
 /** Maximum message length */
 export const MAX_MESSAGE_LENGTH = 120;

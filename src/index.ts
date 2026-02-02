@@ -17,7 +17,7 @@
  */
 
 // Functions
-export { postMessage, postStickyMessage } from "./postMessage.js";
+export { postMessage, postPinMessage } from "./postMessage.js";
 export { readFeed } from "./readFeed.js";
 
 // Configuration
@@ -36,7 +36,7 @@ export {
   CONTRACT_ADDRESS,
   CHAIN_ID,
   PRICE_WEI,
-  STICKY_PRICE_WEI,
+  PIN_PRICE_WEI,
   MAX_MESSAGE_LENGTH,
   MAX_USERNAME_LENGTH,
   DEFAULT_FEED_COUNT,

@@ -10,7 +10,7 @@ import {
   CONTRACT_ADDRESS,
   PUBLIC_TERMINAL_ABI,
   PRICE_WEI,
-  STICKY_PRICE_WEI,
+  PIN_PRICE_WEI,
   MAX_MESSAGE_LENGTH,
   CHAIN_ID,
 } from "./contract.js";
@@ -223,23 +223,23 @@ export async function postMessage(text: string): Promise<PostMessageResult> {
 }
 
 /**
- * Post a sticky message to Public Terminal
+ * Post a pinned message to Public Terminal
  *
- * Sticky messages are pinned to the top of the feed until someone else
- * posts a new sticky. Costs 0.005 ETH (10x regular price).
+ * Pinned messages stay at the top of the feed until someone else
+ * pins a new message. Costs 0.005 ETH (10x regular price).
  *
  * @param text - The message text to post (1-120 characters)
  * @returns Result object with success status, tokenId, txHash, or error
  *
  * @example
  * ```typescript
- * const result = await postStickyMessage("Important announcement!");
+ * const result = await postPinMessage("Important announcement!");
  * if (result.success) {
- *   console.log(`Posted sticky #${result.tokenId}`);
+ *   console.log(`Posted pin #${result.tokenId}`);
  * }
  * ```
  */
-export async function postStickyMessage(text: string): Promise<PostMessageResult> {
+export async function postPinMessage(text: string): Promise<PostMessageResult> {
   // Validate text
   if (!text || typeof text !== "string") {
     return { success: false, error: "Text must be a non-empty string" };
@@ -303,7 +303,7 @@ export async function postStickyMessage(text: string): Promise<PostMessageResult
       abi: PUBLIC_TERMINAL_ABI,
       functionName: "mintSticky",
       args: [BigInt(config.fid), config.username, trimmedText, signature as `0x${string}`],
-      value: STICKY_PRICE_WEI,
+      value: PIN_PRICE_WEI,
       chain: baseSepolia,
     });
 
@@ -348,7 +348,7 @@ export async function postStickyMessage(text: string): Promise<PostMessageResult
     if (errorMessage.includes("InsufficientPayment")) {
       return {
         success: false,
-        error: "Insufficient funds. Sticky posts cost 0.005 ETH.",
+        error: "Insufficient funds. Pinned posts cost 0.005 ETH.",
       };
     }
 
