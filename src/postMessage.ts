@@ -10,6 +10,7 @@ import {
   CONTRACT_ADDRESS,
   PUBLIC_TERMINAL_ABI,
   PRICE_WEI,
+  STICKY_PRICE_WEI,
   MAX_MESSAGE_LENGTH,
   CHAIN_ID,
 } from "./contract.js";
@@ -200,6 +201,154 @@ export async function postMessage(text: string): Promise<PostMessageResult> {
       return {
         success: false,
         error: "Insufficient funds. You need 0.0005 ETH to post.",
+      };
+    }
+
+    if (errorMessage.includes("MessageTooLong")) {
+      return {
+        success: false,
+        error: `Message too long. Max ${MAX_MESSAGE_LENGTH} characters.`,
+      };
+    }
+
+    if (errorMessage.includes("InvalidSignature")) {
+      return {
+        success: false,
+        error: "Signature verification failed. Ensure your wallet is verified for your FID.",
+      };
+    }
+
+    return { success: false, error: errorMessage };
+  }
+}
+
+/**
+ * Post a sticky message to Public Terminal
+ *
+ * Sticky messages are pinned to the top of the feed until someone else
+ * posts a new sticky. Costs 0.005 ETH (10x regular price).
+ *
+ * @param text - The message text to post (1-120 characters)
+ * @returns Result object with success status, tokenId, txHash, or error
+ *
+ * @example
+ * ```typescript
+ * const result = await postStickyMessage("Important announcement!");
+ * if (result.success) {
+ *   console.log(`Posted sticky #${result.tokenId}`);
+ * }
+ * ```
+ */
+export async function postStickyMessage(text: string): Promise<PostMessageResult> {
+  // Validate text
+  if (!text || typeof text !== "string") {
+    return { success: false, error: "Text must be a non-empty string" };
+  }
+
+  const trimmedText = text.trim();
+
+  if (trimmedText.length === 0) {
+    return { success: false, error: "Text cannot be empty" };
+  }
+
+  if (trimmedText.length > MAX_MESSAGE_LENGTH) {
+    return {
+      success: false,
+      error: `Text too long: ${trimmedText.length} characters (max ${MAX_MESSAGE_LENGTH})`,
+    };
+  }
+
+  // Load configuration
+  let config: PublicTerminalConfig;
+  try {
+    config = loadConfig();
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Failed to load configuration",
+    };
+  }
+
+  // Create account from private key
+  const account = privateKeyToAccount(config.privateKey);
+  const walletAddress = account.address;
+
+  // Get signature from API
+  const signatureResult = await getSignature(config, trimmedText, walletAddress);
+
+  if ("error" in signatureResult) {
+    return { success: false, error: signatureResult.error };
+  }
+
+  const { signature } = signatureResult;
+
+  // Create clients
+  const rpcUrl = config.rpcUrl || DEFAULT_RPC_URL;
+
+  const publicClient = createPublicClient({
+    chain: baseSepolia,
+    transport: http(rpcUrl),
+  });
+
+  const walletClient = createWalletClient({
+    account,
+    chain: baseSepolia,
+    transport: http(rpcUrl),
+  });
+
+  try {
+    // Submit transaction with mintSticky
+    const hash = await walletClient.writeContract({
+      address: CONTRACT_ADDRESS,
+      abi: PUBLIC_TERMINAL_ABI,
+      functionName: "mintSticky",
+      args: [BigInt(config.fid), config.username, trimmedText, signature as `0x${string}`],
+      value: STICKY_PRICE_WEI,
+      chain: baseSepolia,
+    });
+
+    // Wait for confirmation
+    const receipt = await publicClient.waitForTransactionReceipt({ hash });
+
+    if (receipt.status !== "success") {
+      return { success: false, error: "Transaction reverted", txHash: hash };
+    }
+
+    // Parse token ID from MessageMinted event
+    let tokenId: number | undefined;
+
+    for (const log of receipt.logs) {
+      try {
+        const decoded = decodeEventLog({
+          abi: PUBLIC_TERMINAL_ABI,
+          data: log.data,
+          topics: log.topics,
+        });
+
+        if (decoded.eventName === "MessageMinted" && decoded.args) {
+          const args = decoded.args as unknown as { tokenId: bigint };
+          if (args.tokenId !== undefined) {
+            tokenId = Number(args.tokenId);
+            break;
+          }
+        }
+      } catch {
+        // Not our event, continue
+      }
+    }
+
+    return {
+      success: true,
+      tokenId,
+      txHash: hash,
+    };
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : String(err);
+
+    if (errorMessage.includes("InsufficientPayment")) {
+      return {
+        success: false,
+        error: "Insufficient funds. Sticky posts cost 0.005 ETH.",
       };
     }
 

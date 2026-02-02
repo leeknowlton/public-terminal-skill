@@ -11,6 +11,9 @@ export const CHAIN_ID = 84532;
 /** Mint price in wei (0.0005 ETH) */
 export const PRICE_WEI = 500000000000000n;
 
+/** Sticky mint price in wei (0.005 ETH) */
+export const STICKY_PRICE_WEI = 5000000000000000n;
+
 /** Maximum message length */
 export const MAX_MESSAGE_LENGTH = 120;
 
@@ -26,6 +29,19 @@ export const PUBLIC_TERMINAL_ABI = [
   {
     type: "function",
     name: "mint",
+    inputs: [
+      { name: "fid", type: "uint256" },
+      { name: "username", type: "string" },
+      { name: "text", type: "string" },
+      { name: "signature", type: "bytes" },
+    ],
+    outputs: [],
+    stateMutability: "payable",
+  },
+  // Mint sticky function
+  {
+    type: "function",
+    name: "mintSticky",
     inputs: [
       { name: "fid", type: "uint256" },
       { name: "username", type: "string" },
@@ -77,6 +93,15 @@ export const PUBLIC_TERMINAL_ABI = [
       { name: "text", type: "string", indexed: false },
       { name: "timestamp", type: "uint256", indexed: false },
       { name: "usernameColor", type: "bytes3", indexed: false },
+    ],
+  },
+  // StickySet event
+  {
+    type: "event",
+    name: "StickySet",
+    inputs: [
+      { name: "tokenId", type: "uint256", indexed: true },
+      { name: "author", type: "address", indexed: true },
     ],
   },
 ] as const;
