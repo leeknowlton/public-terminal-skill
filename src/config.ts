@@ -1,7 +1,7 @@
 import type { PublicTerminalConfig } from "./types.js";
 
 /** Default API base URL */
-const DEFAULT_API_URL = "https://publicterminal.app";
+const DEFAULT_API_URL = "https://public-terminal.vercel.app";
 
 /** Default RPC URL for Base Sepolia */
 const DEFAULT_RPC_URL = "https://sepolia.base.org";
